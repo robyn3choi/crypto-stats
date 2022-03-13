@@ -1,15 +1,10 @@
-import ApiService from 'ApiService'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useData } from 'context/DataContext'
+import PortfolioValueOverTime from 'components/PortfolioValueOverTime'
 
 export default function Home() {
-  const api = new ApiService()
-
+  const { fetchData } = useData()
   const [walletAddress, setWalletAddress] = useState<string>('')
-
-  async function getTokenBalances() {
-    const res = await api.getTokenBalances(walletAddress)
-    console.log(res)
-  }
 
   return (
     <div>
@@ -18,7 +13,10 @@ export default function Home() {
         onChange={(e) => setWalletAddress(e.target.value)}
         value={walletAddress}
       />
-      <button onClick={getTokenBalances}>Go!</button>
+      <button onClick={() => fetchData(walletAddress)} disabled={!walletAddress}>
+        Go!
+      </button>
+      <PortfolioValueOverTime />
     </div>
   )
 }
